@@ -1,0 +1,110 @@
+#1 Using a subquery, find the names of all the tracks for the album "Californication".
+What is the title of the 8th track? ANSWER: Porcelain
+
+select tracks.name
+,albums.title
+from Tracks
+left join albums on tracks.albumid=albums.albumid
+where albums.title='Californication';
+
++-------------------+-----------------+
+| Name              | Title           |
++-------------------+-----------------+
+| Around The World  | Californication |
+| Parallel Universe | Californication |
+| Scar Tissue       | Californication |
+| Otherside         | Californication |
+| Get On Top        | Californication |
+| Californication   | Californication |
+| Easily            | Californication |
+| Porcelain         | Californication |
+| Emit Remmus       | Californication |
+| I Like Dirt       | Californication |
++-------------------+-----------------+
+(Output limit exceeded, 10 of 15 total rows shown)
+
+
+#2 Find the total number of invoices for each customer along with the customer's full name, city and email. what is the email address of the 5th person, František Wichterlová? Enter the answer below. ANSWER: frantisekw@jetbrains.com
+
+select c.customerid, c.firstname, c.lastname, c.city, c.email,
+Count(i.invoiceid)
+from customers c
+inner join invoices I on c.customerid=i.customerid
+group by c.customerid;
+
++------------+-----------+-------------+---------------------+--------------------------+--------------------+
+| CustomerId | FirstName | LastName    | City                | Email                    | Count(i.invoiceid) |
++------------+-----------+-------------+---------------------+--------------------------+--------------------+
+|          1 | Luís      | Gonçalves   | São José dos Campos | luisg@embraer.com.br     |                  7 |
+|          2 | Leonie    | Köhler      | Stuttgart           | leonekohler@surfeu.de    |                  7 |
+|          3 | François  | Tremblay    | Montréal            | ftremblay@gmail.com      |                  7 |
+|          4 | Bjørn     | Hansen      | Oslo                | bjorn.hansen@yahoo.no    |                  7 |
+|          5 | František | Wichterlová | Prague              | frantisekw@jetbrains.com |                  7 |
+|          6 | Helena    | Holý        | Prague              | hholy@gmail.com          |                  7 |
+|          7 | Astrid    | Gruber      | Vienne              | astrid.gruber@apple.at   |                  7 |
+|          8 | Daan      | Peeters     | Brussels            | daan_peeters@apple.be    |                  7 |
+|          9 | Kara      | Nielsen     | Copenhagen          | kara.nielsen@jubii.dk    |                  7 |
+|         10 | Eduardo   | Martins     | São Paulo           | eduardo@woodstock.com.br |                  7 |
++------------+-----------+-------------+---------------------+--------------------------+--------------------+
+(Output limit exceeded, 10 of 59 total rows shown)
+
+
+#3 retrieve the track name, album, artistID, and trackID for all the albums.
+What is the song title of trackID 12 from the "For Those About to Rock We Salute You" album? Enter the answer below. ANSWER: Breaking The Rules
+
+SELECT T. TrackID, T.Name, A.Title, A.ArtistID
+FROM Tracks T
+INNER JOIN Albums A on T.AlbumID=A.AlbumID
+GROUP BY T.TrackID ="12";
+
++---------+--------------------+----------------------------------------------------+----------+
+| TrackId | Name               | Title                                              | ArtistId |
++---------+--------------------+----------------------------------------------------+----------+
+|    3503 | Koyaanisqatsi      | Koyaanisqatsi (Soundtrack from the Motion Picture) |      275 |
+|      12 | Breaking The Rules | For Those About To Rock We Salute You              |        1 |
++---------+--------------------+----------------------------------------------------+----------+
+
+#4 Retrieve a list with the managers last name, and the last name of the employees who report to him or her. After running the query described above, who are the reports for the manager named Mitchell (select all that apply)? ANSWER: KING,CALLAHAN
+
+SELECT EMP.Lastname AS EmployeeName, Emp.Reportsto, MGR.Lastname AS MNGRName
+From Employees as Emp
+Left join Employees MGR on Emp.Reportsto=MGR.EmployeeID
+Where MGR.Lastname='Mitchell'; 
+
++--------------+-----------+----------+
+| EmployeeName | ReportsTo | MNGRName |
++--------------+-----------+----------+
+| King         |         6 | Mitchell |
+| Callahan     |         6 | Mitchell |
++--------------+-----------+----------+
+
+#5 Find the name and ID of the artists who do not have albums.  two of the records returned have the same last name. Enter that name below. ANSWER: Gilberto
+
+SELECT Artists.ArtistID, Artists.Name, Albums.Title
+from Artists
+LEFT JOIN Albums on Artists.ArtistID=Albums.ArtistID
+Where Albums.Title is null
+ORDER By Artists.ArtistID ASC
+
+#6 Use a UNION to create a list of all the employee's and customer's first names and last names ordered by the last name in descending order. determine what is the last name of the 6th record? Enter it below. Remember to order things in descending order to be sure to get the correct answer. ANSWER: Taylor
+
+Select Firstname, Lastname 
+from Employees
+Union
+Select Firstname, Lastname
+from Customers
+Order by Lastname DESC
+
+#7 See if there are any customers who have a different city listed in their billing city versus their customer city. ANSWER: 
+No customers have a different city listed in their billing city versus customer city.
+
+SELECT Cust.CustomerID, Cust.Firstname, Cust.LastName, Cust.City, INV.BillingCity
+From Customers Cust 
+LEFT Join Invoices INV on Cust.CustomerID=Inv.CustomerID
+WHERE Cust.City<>INV.BillingCity;
+
++------------+-----------+----------+------+-------------+
+| CustomerId | FirstName | LastName | City | BillingCity |
++------------+-----------+----------+------+-------------+
++------------+-----------+----------+------+-------------+
+(Zero rows)
